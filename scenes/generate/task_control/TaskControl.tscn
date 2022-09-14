@@ -1,0 +1,291 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://scenes/generate/task_control/ResultsContainer.gd" type="Script" id=1]
+[ext_resource path="res://scenes/generate/task_control/SeedLineEdit.gd" type="Script" id=2]
+[ext_resource path="res://scenes/generate/task_control/TaskControl.gd" type="Script" id=3]
+[ext_resource path="res://icons/GuiDropdown.svg" type="Texture" id=4]
+[ext_resource path="res://icons/Remove.svg" type="Texture" id=5]
+[ext_resource path="res://icons/Add.svg" type="Texture" id=6]
+[ext_resource path="res://icons/Close.svg" type="Texture" id=7]
+
+[sub_resource type="Shader" id=3]
+code = "//https://godotshaders.com/shader/hsv-adjustment/
+shader_type canvas_item;
+
+vec3 rgb2hsv(vec3 c) {
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
+void fragment(){
+  float value = FRAGCOORD.x * sin(TIME);
+  vec3 hsv_col = rgb2hsv(COLOR.rgb);
+  hsv_col.z *= value; 
+  COLOR.rgb = hsv2rgb(hsv_col);
+  COLOR = vec4(1.0,1.0,1.0,1.0);
+ }"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+
+[node name="TaskControl" type="MarginContainer"]
+anchor_right = 1.0
+margin_bottom = 55.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource( 3 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1140.0
+margin_bottom = 55.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 1140.0
+margin_bottom = 55.0
+size_flags_horizontal = 3
+
+[node name="SettingsContainer" type="VBoxContainer" parent="VBoxContainer"]
+margin_right = 1140.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+
+[node name="HBoxContainer1" type="HBoxContainer" parent="VBoxContainer/SettingsContainer"]
+margin_right = 1140.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+margin_top = 5.0
+margin_right = 51.0
+margin_bottom = 19.0
+text = "Prompt:"
+
+[node name="PromptEdit" type="LineEdit" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+margin_left = 55.0
+margin_right = 1140.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+text = "Hamsters playing Chess."
+caret_blink = true
+caret_blink_speed = 0.5
+__meta__ = {
+"_editor_description_": "Describe the image you want. Go to lexica.art for inspiration."
+}
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsContainer"]
+margin_top = 28.0
+margin_right = 1140.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+
+[node name="IterationsLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_top = 5.0
+margin_right = 66.0
+margin_bottom = 19.0
+text = "Iterations:"
+
+[node name="IterationsSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 70.0
+margin_right = 144.0
+margin_bottom = 24.0
+min_value = 1.0
+value = 1.0
+__meta__ = {
+"_editor_description_": "How often this task will be run."
+}
+
+[node name="Samples" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 148.0
+margin_top = 5.0
+margin_right = 206.0
+margin_bottom = 19.0
+text = "Samples:"
+
+[node name="SampleSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 210.0
+margin_right = 284.0
+margin_bottom = 24.0
+min_value = 1.0
+max_value = 128.0
+value = 4.0
+__meta__ = {
+"_editor_description_": "How many images are created per iteration."
+}
+
+[node name="WLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 288.0
+margin_top = 5.0
+margin_right = 330.0
+margin_bottom = 19.0
+text = "Width:"
+
+[node name="WSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 334.0
+margin_right = 408.0
+margin_bottom = 24.0
+min_value = 64.0
+max_value = 2048.0
+step = 64.0
+value = 512.0
+__meta__ = {
+"_editor_description_": "Width and height of generated image. Best results are to be expected for 512x512."
+}
+
+[node name="HLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 412.0
+margin_top = 5.0
+margin_right = 458.0
+margin_bottom = 19.0
+text = "Height:"
+
+[node name="HSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 462.0
+margin_right = 536.0
+margin_bottom = 24.0
+min_value = 64.0
+max_value = 2048.0
+step = 64.0
+value = 512.0
+__meta__ = {
+"_editor_description_": "Width and height of generated image. Best results are to be expected for 512x512."
+}
+
+[node name="StepsLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 540.0
+margin_top = 5.0
+margin_right = 579.0
+margin_bottom = 19.0
+text = "Steps:"
+
+[node name="StepsSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 583.0
+margin_right = 657.0
+margin_bottom = 24.0
+max_value = 500.0
+value = 30.0
+__meta__ = {
+"_editor_description_": "How many steps are used to create the image. Loosely correlates with quality."
+}
+
+[node name="ScaleLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 661.0
+margin_top = 5.0
+margin_right = 698.0
+margin_bottom = 19.0
+text = "Scale:"
+
+[node name="ScaleSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 702.0
+margin_right = 776.0
+margin_bottom = 24.0
+max_value = 20.0
+step = 0.1
+value = 7.5
+__meta__ = {
+"_editor_description_": "lower: be creative
+higer: follow the prompt strictly"
+}
+
+[node name="SeedLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 780.0
+margin_top = 5.0
+margin_right = 815.0
+margin_bottom = 19.0
+text = "Seed:"
+
+[node name="SeedLineEdit" type="LineEdit" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 819.0
+margin_right = 913.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 94, 0 )
+hint_tooltip = "Seed for determinitic generation. If left empty a random seed will be used."
+caret_blink = true
+caret_blink_speed = 0.5
+script = ExtResource( 2 )
+
+[node name="QueueButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 917.0
+margin_right = 972.0
+margin_bottom = 24.0
+text = "Queue"
+
+[node name="DropDownButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 976.0
+margin_right = 1076.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 100, 0 )
+icon = ExtResource( 4 )
+clip_text = true
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 1080.0
+margin_right = 1108.0
+margin_bottom = 24.0
+icon = ExtResource( 5 )
+__meta__ = {
+"_editor_description_": "Delete this task"
+}
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+visible = false
+margin_left = 1112.0
+margin_right = 1140.0
+margin_bottom = 24.0
+hint_tooltip = "Stop after this iteration"
+icon = ExtResource( 7 )
+
+[node name="AddButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
+margin_left = 1112.0
+margin_right = 1140.0
+margin_bottom = 24.0
+icon = ExtResource( 6 )
+__meta__ = {
+"_editor_description_": "Duplicate this task"
+}
+
+[node name="ResultsContainer" type="Panel" parent="VBoxContainer"]
+visible = false
+margin_top = 56.0
+margin_right = 1140.0
+margin_bottom = 576.0
+rect_min_size = Vector2( 0, 520 )
+size_flags_horizontal = 3
+script = ExtResource( 1 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ResultsContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 500 )
+size_flags_horizontal = 3
+follow_focus = true
+
+[node name="FlowContainer" type="HFlowContainer" parent="VBoxContainer/ResultsContainer/ScrollContainer"]
+margin_right = 1140.0
+margin_bottom = 520.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+material = SubResource( 4 )
+position = Vector2( 569.5, 28 )
+scale = Vector2( 5.705, 0.29 )
+
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" to="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" method="_on_SeedLineEdit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/QueueButton" to="." method="_on_QueueButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/DropDownButton" to="." method="_on_DropDownButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/CancelButton" to="." method="_on_CancelButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/AddButton" to="." method="_on_AddButton_pressed"]

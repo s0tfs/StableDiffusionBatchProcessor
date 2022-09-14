@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://png/seed_000824906.png" type="Texture" id=1]
+
+[node name="About" type="MarginContainer"]
+margin_top = 104.0
+margin_right = 516.0
+margin_bottom = 616.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+visible = false
+margin_right = 516.0
+margin_bottom = 512.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+visible = false
+margin_right = 516.0
+margin_bottom = 512.0
+size_flags_horizontal = 3
+bbcode_enabled = true
+bbcode_text = "[center]
+[b]Stable Diffusion
+Batch Generator v0.1[/b]
+
+Based on [url=https://github.com/basujindal/stable-diffusion]https://github.com/basujindal/stable-diffusion[/url] 
+forked from [url=https://github.com/CompVis/stable-diffusion]https://github.com/CompVis/stable-diffusion[/url]
+
+Made with [url=https://github.com/godotengine/godot]Godot[/url] and [url=https://github.com/touilleMan/godot-python]Godot Python[/url]
+
+Get the weights from [url=https://huggingface.co/CompVis]https://huggingface.co/CompVis[/url]
+[/center]"
+text = "
+Stable Diffusion
+Batch Generator v0.1
+
+Based on https://github.com/basujindal/stable-diffusion 
+forked from https://github.com/CompVis/stable-diffusion
+
+Made with Godot and Godot Python
+
+Get the weights from https://huggingface.co/CompVis
+"
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+visible = false
+margin_left = 4.0
+margin_right = 516.0
+margin_bottom = 512.0
+texture = ExtResource( 1 )

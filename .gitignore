@@ -1,0 +1,6 @@
+.import/
+addons/
+export/
+export.cfg
+export_presets.cfg
+**/__pycache__

@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/generate/task_control/result_tile.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://icons/Save.svg" type="Texture" id=3]
+
+[node name="ResultTile" type="TextureRect"]
+margin_right = 76.0
+margin_bottom = 71.0
+texture = ExtResource( 2 )
+script = ExtResource( 1 )
+
+[node name="EnlargeButton" type="Button" parent="."]
+visible = false
+margin_right = 29.0
+margin_bottom = 20.0
+
+[node name="SaveButton" type="Button" parent="."]
+margin_right = 28.0
+margin_bottom = 22.0
+icon = ExtResource( 3 )
+flat = true
+__meta__ = {
+"_editor_description_": "Save as ..."
+}
+
+[connection signal="pressed" from="SaveButton" to="." method="_on_SaveButton_pressed"]

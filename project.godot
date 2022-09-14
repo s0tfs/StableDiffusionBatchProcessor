@@ -1,0 +1,61 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "TextureRect",
+"class": "ResultTile",
+"language": "GDScript",
+"path": "res://scenes/generate/task_control/result_tile.gd"
+}, {
+"base": "Resource",
+"class": "Settings",
+"language": "GDScript",
+"path": "res://resources/settings_res.gd"
+}, {
+"base": "Control",
+"class": "TaskControl",
+"language": "GDScript",
+"path": "res://scenes/generate/task_control/TaskControl.gd"
+} ]
+_global_script_class_icons={
+"ResultTile": "",
+"Settings": "",
+"TaskControl": ""
+}
+
+[application]
+
+config/name="StableDIM"
+run/main_scene="res://scenes/Main.tscn"
+boot_splash/show_image=false
+config/icon="res://icon.png"
+
+[autoload]
+
+StableDiffusion="*res://autoload/StableDiffusion.py"
+Signals="*res://autoload/signals.gd"
+SaveDialog="*res://autoload/save_dialog.gd"
+
+[gdnative]
+
+singletons=[ "res://pythonscript.gdnlib" ]
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_clear_color=Color( 0.113725, 0.113725, 0.113725, 1 )
+environment/default_environment="res://default_env.tres"
