@@ -1,6 +1,5 @@
 # modified from https://github.com/basujindal/stable-diffusion
 from godot import exposed, export, signal, Node, PoolByteArray
-from godot.bindings import Node
 import sys,os
 import torch
 from torch import autocast
@@ -17,8 +16,7 @@ logging.set_verbosity_error() # suppress: Some weights of the model checkpoint a
 
 @exposed
 class StableDiffusion(Node):
-  # member variables here, example:
-  config_file_path = export(str, "addons/pythonscript/stable-diffusion/optimizedSD/v1-inference.yaml")
+  config_file_path = export(str, "addons/pythonscript/src/latent-diffusion/optimizedSD/v1-inference.yaml" )
   #options
   opt_unet_bs = 1
   opt_device = "cuda"
@@ -37,6 +35,7 @@ class StableDiffusion(Node):
   
   canceled = export(bool,False)
   
+  #signals
   model_init_progressed = signal()
   image_data_ready = signal()
   inference_started = signal()
@@ -152,11 +151,8 @@ class StableDiffusion(Node):
     self.call("emit_signal","model_init_progressed","success")
     
   def inference_gd(self,args):
-    try:
-      self.next_seed = int(args["seed"])
-    except:
-      self.next_seed = randint(0, 1000000)
-      print("use random seed ", self.next_seed)
+    self.next_seed = args["seed"]
+    print("Using seed",self.next_seed)
     self.inference(p_prompt=str(args["prompt"]),p_W=args["W"],p_H=args["H"],p_n_samples=args["samples"],p_ddim_steps = args["ddim_steps"],p_n_iter = args["n_iter"],p_scale = args["scale"])
   
   def inference(self,p_prompt = "hamsters playing chess",
@@ -169,7 +165,7 @@ class StableDiffusion(Node):
                 p_C = 4, #latent channels
                 p_f = 8, #downsampling factor
                 p_ddim_eta = 0.0, # ddim eta (eta=0.0 corresponds to deterministic sampling
-                p_sampler = "ddim"
+                p_sampler = "plms"
                 ):
     self.call("emit_signal","inference_started")
     assert p_prompt is not None
@@ -250,5 +246,6 @@ class StableDiffusion(Node):
         self.call("emit_signal","inference_finished")
 
   def _ready(self):
-    print("current_path: ",os.path.dirname(os.path.dirname(__file__))) #locate self
+    pass
+    #print("current_path: ",os.path.dirname(os.path.dirname(__file__))) #locate self
 

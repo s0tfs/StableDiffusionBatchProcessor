@@ -31,6 +31,7 @@ func _set_state(new_state):
       _set_editable(false)
       Signals.emit_signal("task_queued")
     STATE.SAMPLING:
+      queue_button.modulate = Color.yellow
       remove_button.hide()
       cancel_button.show()
       if seed_line_edit.text == "":
@@ -92,7 +93,7 @@ func get_args() -> Dictionary:
   "ddim_steps":int(steps_spin_box.value),
   "n_iter":int(iterations_spin_box.value),
   "scale":scale_spin_box.value,
-  "seed": seed_line_edit.text
+  "seed": seed_line_edit.text.to_int()
   }
 
 func _on_QueueButton_pressed():

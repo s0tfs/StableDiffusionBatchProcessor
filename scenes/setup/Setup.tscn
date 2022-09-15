@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/setup/SetupModel.gd" type="Script" id=1]
 [ext_resource path="res://scenes/setup/folder_select.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/setup/init_button.gd" type="Script" id=5]
 [ext_resource path="res://scenes/setup/ShowSetupButton.gd" type="Script" id=6]
 [ext_resource path="res://scenes/setup/file_select.gd" type="Script" id=7]
+[ext_resource path="res://icons/Close.svg" type="Texture" id=8]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 margin_right = 40.0
@@ -21,18 +22,18 @@ script = ExtResource( 6 )
 
 [node name="SetupPopup" type="Popup" parent="ShowSetupButton"]
 visible = true
-margin_left = 10.0
-margin_top = 54.0
-margin_right = 305.0
-margin_bottom = 140.0
+margin_left = 5.0
+margin_top = 37.0
+margin_right = 545.0
+margin_bottom = 96.0
 
 [node name="Panel" type="Panel" parent="ShowSetupButton/SetupPopup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -10.0
-margin_top = -10.0
-margin_right = 10.0
-margin_bottom = 10.0
+margin_left = -5.0
+margin_top = -5.0
+margin_right = 5.0
+margin_bottom = 5.0
 
 [node name="Setup Model" type="VBoxContainer" parent="ShowSetupButton/SetupPopup"]
 margin_right = 292.0
@@ -40,7 +41,7 @@ margin_bottom = 91.0
 script = ExtResource( 1 )
 
 [node name="Weights" type="HBoxContainer" parent="ShowSetupButton/SetupPopup/Setup Model"]
-margin_right = 296.0
+margin_right = 540.0
 margin_bottom = 24.0
 script = ExtResource( 7 )
 
@@ -52,20 +53,28 @@ text = "Weights: "
 
 [node name="LineEdit" type="LineEdit" parent="ShowSetupButton/SetupPopup/Setup Model/Weights"]
 margin_left = 64.0
-margin_right = 264.0
+margin_right = 426.0
 margin_bottom = 24.0
-rect_min_size = Vector2( 200, 0 )
-text = "load weights file"
+size_flags_horizontal = 3
 editable = false
+placeholder_text = "no path to weights file"
 __meta__ = {
 "_editor_description_": "Get the weights from https://huggingface.co/CompVis"
 }
 
 [node name="open_file_dialog_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Weights"]
-margin_left = 268.0
-margin_right = 296.0
+margin_left = 430.0
+margin_right = 458.0
 margin_bottom = 24.0
 icon = ExtResource( 3 )
+
+[node name="init_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Weights"]
+margin_left = 462.0
+margin_right = 540.0
+margin_bottom = 24.0
+hint_tooltip = "Read weights file and instantiate model. This can take some time."
+text = "Init Model"
+script = ExtResource( 5 )
 
 [node name="FileDialog" type="FileDialog" parent="ShowSetupButton/SetupPopup/Setup Model/Weights"]
 margin_left = 185.0
@@ -78,23 +87,15 @@ dialog_hide_on_ok = true
 mode = 0
 access = 2
 
-[node name="init_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model"]
-margin_top = 28.0
-margin_right = 296.0
-margin_bottom = 48.0
-hint_tooltip = "Read weights file and instantiate model. This can take some time."
-text = "Init Model"
-script = ExtResource( 5 )
-
 [node name="HSeparator" type="HSeparator" parent="ShowSetupButton/SetupPopup/Setup Model"]
-margin_top = 52.0
-margin_right = 296.0
-margin_bottom = 56.0
+margin_top = 28.0
+margin_right = 540.0
+margin_bottom = 32.0
 
 [node name="Outdir" type="HBoxContainer" parent="ShowSetupButton/SetupPopup/Setup Model"]
-margin_top = 60.0
-margin_right = 296.0
-margin_bottom = 84.0
+margin_top = 36.0
+margin_right = 540.0
+margin_bottom = 60.0
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
@@ -105,18 +106,30 @@ text = "Output Dir:"
 
 [node name="LineEdit" type="LineEdit" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
 margin_left = 76.0
-margin_right = 256.0
+margin_right = 476.0
 margin_bottom = 24.0
-rect_min_size = Vector2( 180, 0 )
+rect_min_size = Vector2( 400, 0 )
+size_flags_horizontal = 3
+editable = false
+placeholder_text = "no autosave path"
 __meta__ = {
 "_editor_description_": "leave this empty if you do not want your results to be automatically saved"
 }
 
 [node name="open_file_dialog_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
-margin_left = 260.0
-margin_right = 288.0
+margin_left = 480.0
+margin_right = 508.0
 margin_bottom = 24.0
 icon = ExtResource( 3 )
+
+[node name="ClearButton" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
+margin_left = 512.0
+margin_right = 540.0
+margin_bottom = 24.0
+icon = ExtResource( 8 )
+__meta__ = {
+"_editor_description_": "do not autosave"
+}
 
 [node name="FileDialog" type="FileDialog" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
 margin_left = 218.0
@@ -147,7 +160,8 @@ script = ExtResource( 4 )
 [connection signal="pressed" from="ShowSetupButton" to="ShowSetupButton" method="_on_ShowSetupButton_pressed"]
 [connection signal="hide" from="ShowSetupButton/SetupPopup/Setup Model" to="ShowSetupButton/SetupPopup/Setup Model" method="_on_Setup_Model_hide"]
 [connection signal="pressed" from="ShowSetupButton/SetupPopup/Setup Model/Weights/open_file_dialog_button" to="ShowSetupButton/SetupPopup/Setup Model/Weights" method="_on_open_file_dialog_button_pressed"]
+[connection signal="pressed" from="ShowSetupButton/SetupPopup/Setup Model/Weights/init_button" to="ShowSetupButton/SetupPopup/Setup Model" method="_on_init_button_pressed"]
 [connection signal="file_selected" from="ShowSetupButton/SetupPopup/Setup Model/Weights/FileDialog" to="ShowSetupButton/SetupPopup/Setup Model/Weights" method="_on_FileDialog_file_selected"]
-[connection signal="pressed" from="ShowSetupButton/SetupPopup/Setup Model/init_button" to="ShowSetupButton/SetupPopup/Setup Model" method="_on_init_button_pressed"]
 [connection signal="pressed" from="ShowSetupButton/SetupPopup/Setup Model/Outdir/open_file_dialog_button" to="ShowSetupButton/SetupPopup/Setup Model/Outdir" method="_on_open_file_dialog_button_pressed"]
+[connection signal="pressed" from="ShowSetupButton/SetupPopup/Setup Model/Outdir/ClearButton" to="ShowSetupButton/SetupPopup/Setup Model/Outdir" method="_on_ClearButton_pressed"]
 [connection signal="dir_selected" from="ShowSetupButton/SetupPopup/Setup Model/Outdir/FileDialog" to="ShowSetupButton/SetupPopup/Setup Model/Outdir" method="_on_FileDialog_dir_selected"]

@@ -10,6 +10,7 @@ var args : Dictionary
 export var settings :Resource = preload("res://resources/settings.tres")
 
 func _ready():
+  randomize()
   StableDiffusion.connect("model_init_progressed",self,"_on_model_init_progressed")
   StableDiffusion.connect("inference_finished",self,"_on_inference_finished")
   StableDiffusion.connect("image_data_ready",self,"_on_image_data_ready")

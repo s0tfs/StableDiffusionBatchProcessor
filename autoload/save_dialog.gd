@@ -11,6 +11,8 @@ func _ready():
   window_title = "Save as ..."
   connect("file_selected",self,"_on_file_selected")
   Signals.connect("image_save_requested",self,"_on_image_save_requested")
+  rect_position = Vector2(50,50)
+  rect_size = Vector2(150,100)
   
 func _on_image_save_requested(image:Image):
   image_to_save = image

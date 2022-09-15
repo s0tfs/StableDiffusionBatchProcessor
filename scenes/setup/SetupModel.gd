@@ -2,7 +2,7 @@ extends Control
 
 onready var weights_line_edit := $Weights/LineEdit
 onready var outdir_line_edit := $Outdir/LineEdit
-onready var init_button = $init_button
+onready var init_button = $Weights/init_button
 
 export var settings :Resource = preload("res://resources/settings.tres")
 var model_init_thread:Thread

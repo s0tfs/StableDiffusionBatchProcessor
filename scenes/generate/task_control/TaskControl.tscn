@@ -59,7 +59,7 @@ size_flags_horizontal = 3
 
 [node name="SettingsContainer" type="VBoxContainer" parent="VBoxContainer"]
 margin_right = 1140.0
-margin_bottom = 52.0
+margin_bottom = 54.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer1" type="HBoxContainer" parent="VBoxContainer/SettingsContainer"]
@@ -78,7 +78,7 @@ margin_left = 55.0
 margin_right = 1140.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-text = "Hamsters playing Chess."
+text = "Hamsters playing chess."
 caret_blink = true
 caret_blink_speed = 0.5
 __meta__ = {
@@ -88,19 +88,19 @@ __meta__ = {
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsContainer"]
 margin_top = 28.0
 margin_right = 1140.0
-margin_bottom = 52.0
+margin_bottom = 54.0
 size_flags_horizontal = 3
 
 [node name="IterationsLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 66.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Iterations:"
 
 [node name="IterationsSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 70.0
 margin_right = 144.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 min_value = 1.0
 value = 1.0
 __meta__ = {
@@ -109,15 +109,15 @@ __meta__ = {
 
 [node name="Samples" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 148.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 206.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Samples:"
 
 [node name="SampleSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 210.0
 margin_right = 284.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 min_value = 1.0
 max_value = 128.0
 value = 4.0
@@ -127,15 +127,15 @@ __meta__ = {
 
 [node name="WLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 288.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 330.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Width:"
 
 [node name="WSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 334.0
 margin_right = 408.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 min_value = 64.0
 max_value = 2048.0
 step = 64.0
@@ -146,15 +146,15 @@ __meta__ = {
 
 [node name="HLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 412.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 458.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Height:"
 
 [node name="HSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 462.0
 margin_right = 536.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 min_value = 64.0
 max_value = 2048.0
 step = 64.0
@@ -165,15 +165,15 @@ __meta__ = {
 
 [node name="StepsLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 540.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 579.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Steps:"
 
 [node name="StepsSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 583.0
 margin_right = 657.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 max_value = 500.0
 value = 30.0
 __meta__ = {
@@ -182,15 +182,15 @@ __meta__ = {
 
 [node name="ScaleLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 661.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 698.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Scale:"
 
 [node name="ScaleSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 702.0
 margin_right = 776.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 max_value = 20.0
 step = 0.1
 value = 7.5
@@ -201,17 +201,20 @@ higer: follow the prompt strictly"
 
 [node name="SeedLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 780.0
-margin_top = 5.0
+margin_top = 6.0
 margin_right = 815.0
-margin_bottom = 19.0
+margin_bottom = 20.0
 text = "Seed:"
 
 [node name="SeedLineEdit" type="LineEdit" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 819.0
 margin_right = 913.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 rect_min_size = Vector2( 94, 0 )
 hint_tooltip = "Seed for determinitic generation. If left empty a random seed will be used."
+align = 2
+clear_button_enabled = true
+placeholder_text = "random"
 caret_blink = true
 caret_blink_speed = 0.5
 script = ExtResource( 2 )
@@ -219,13 +222,13 @@ script = ExtResource( 2 )
 [node name="QueueButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 917.0
 margin_right = 972.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 text = "Queue"
 
 [node name="DropDownButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 976.0
 margin_right = 1076.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 rect_min_size = Vector2( 100, 0 )
 icon = ExtResource( 4 )
 clip_text = true
@@ -233,7 +236,7 @@ clip_text = true
 [node name="RemoveButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 1080.0
 margin_right = 1108.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 icon = ExtResource( 5 )
 __meta__ = {
 "_editor_description_": "Delete this task"
@@ -250,7 +253,7 @@ icon = ExtResource( 7 )
 [node name="AddButton" type="Button" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 1112.0
 margin_right = 1140.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 icon = ExtResource( 6 )
 __meta__ = {
 "_editor_description_": "Duplicate this task"
@@ -284,6 +287,7 @@ position = Vector2( 569.5, 28 )
 scale = Vector2( 5.705, 0.29 )
 
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" to="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" method="_on_SeedLineEdit_text_changed"]
+[connection signal="text_entered" from="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" to="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" method="_on_SeedLineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/QueueButton" to="." method="_on_QueueButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/DropDownButton" to="." method="_on_DropDownButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/RemoveButton" to="." method="_on_RemoveButton_pressed"]
