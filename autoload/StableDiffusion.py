@@ -1,6 +1,6 @@
 # modified from https://github.com/basujindal/stable-diffusion
-from godot import exposed, export
-from godot import * 
+from godot import exposed, export, signal, Node, PoolByteArray
+from godot.bindings import Node
 import sys,os
 import torch
 from torch import autocast
@@ -11,11 +11,6 @@ from random import randint
 from einops import rearrange
 from PIL import Image as PILImage
 import numpy as np
-
-
-
-
-
 
 from transformers import logging
 logging.set_verbosity_error() # suppress: Some weights of the model checkpoint at openai/clip-vit-large-patch14 were not used when initializing CLIPTextModel
