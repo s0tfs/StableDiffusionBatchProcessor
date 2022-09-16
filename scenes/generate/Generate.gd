@@ -37,7 +37,6 @@ func _on_task_removed():
     tasks_container.add_child(task_control_packed_scene.instance())
 
 func _try_to_start_new_task():
-  print_debug("try to start new task")
   if StableDiffusion.model_ready:
     if inference_thread.is_active():
       if not inference_thread.is_alive():
