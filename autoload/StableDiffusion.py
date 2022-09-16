@@ -1,7 +1,8 @@
 # modified from https://github.com/basujindal/stable-diffusion
 from godot import exposed, export, signal, Node, PoolByteArray
 import sys,os
-sys.path.append("../addons/pythonscript/x11-64/src/latent-diffusion")
+sys.path.append(os.path.join(os.path.dirname(__file__),"../addons/pythonscript/x11-64/src/latent-diffusion"))
+print("sys.path: ",sys.path)
 import torch
 from torch import autocast
 from omegaconf import OmegaConf
@@ -248,5 +249,4 @@ class StableDiffusion(Node):
 
   def _ready(self):
     pass
-    #print("current_path: ",os.path.dirname(os.path.dirname(__file__))) #locate self
 
