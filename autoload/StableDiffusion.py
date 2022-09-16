@@ -1,6 +1,7 @@
 # modified from https://github.com/basujindal/stable-diffusion
 from godot import exposed, export, signal, Node, PoolByteArray
 import sys,os
+sys.path.append("../addons/pythonscript/x11-64/src/latent-diffusion")
 import torch
 from torch import autocast
 from omegaconf import OmegaConf
@@ -16,7 +17,7 @@ logging.set_verbosity_error() # suppress: Some weights of the model checkpoint a
 
 @exposed
 class StableDiffusion(Node):
-  config_file_path = export(str, "addons/pythonscript/src/latent-diffusion/optimizedSD/v1-inference.yaml" )
+  config_file_path = export(str, "addons/pythonscript/x11-64/src/latent-diffusion/optimizedSD/v1-inference.yaml")
   #options
   opt_unet_bs = 1
   opt_device = "cuda"
