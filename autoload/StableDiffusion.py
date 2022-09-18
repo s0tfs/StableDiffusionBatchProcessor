@@ -18,7 +18,8 @@ logging.set_verbosity_error() # suppress: Some weights of the model checkpoint a
 
 @exposed
 class StableDiffusion(Node):
-  config_file_path = export(str, "addons/pythonscript/x11-64/src/latent-diffusion/optimizedSD/v1-inference.yaml")
+  config_file_path_win64 = export(str, "addons/pythonscript/windows-64/src/latent-diffusion/optimizedSD/v1-inference.yaml")
+  config_file_path_x11_64 = export(str, "addons/pythonscript/x11-64/src/latent-diffusion/optimizedSD/v1-inference.yaml")
   #options
   opt_unet_bs = 1
   opt_device = "cuda"
@@ -120,8 +121,17 @@ class StableDiffusion(Node):
     for key in lo:
         weights["model2." + key[6:]] = weights.pop(key)
     self.call("emit_signal","model_init_progressed","Loading Config")
-    print(f"Load config from {self.config_file_path}")
-    config = OmegaConf.load(f"{self.config_file_path}")
+    try:
+      config = OmegaConf.load(f"{self.config_file_path_x11_64}")
+      print(f"Load config from {self.config_file_path_x11_64}")
+    except:
+      try:
+        config = OmegaConf.load(f"{self.config_file_path_win64}")
+        print(f"Load config from {self.config_file_path_win64}")
+      except:
+        self.call("emit_signal","model_init_progressed","failed")
+        print("No config file found.")
+        return
     print("Instantiate Model")
     self.call("emit_signal","model_init_progressed","Instantiating UNet")
     self.model = instantiate_from_config(config.modelUNet)
