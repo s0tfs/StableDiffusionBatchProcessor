@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/setup/SetupModel.gd" type="Script" id=1]
 [ext_resource path="res://scenes/setup/folder_select.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/setup/ShowSetupButton.gd" type="Script" id=6]
 [ext_resource path="res://scenes/setup/file_select.gd" type="Script" id=7]
 [ext_resource path="res://icons/Close.svg" type="Texture" id=8]
+[ext_resource path="res://scenes/setup/DeviceOptionButton.gd" type="Script" id=9]
 
 [node name="HBoxContainer" type="HBoxContainer"]
 margin_right = 40.0
@@ -25,15 +26,11 @@ visible = true
 margin_left = 5.0
 margin_top = 37.0
 margin_right = 545.0
-margin_bottom = 96.0
+margin_bottom = 122.0
 
 [node name="Panel" type="Panel" parent="ShowSetupButton/SetupPopup"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -5.0
-margin_top = -5.0
-margin_right = 5.0
-margin_bottom = 5.0
 
 [node name="Setup Model" type="VBoxContainer" parent="ShowSetupButton/SetupPopup"]
 margin_right = 292.0
@@ -87,15 +84,33 @@ dialog_hide_on_ok = true
 mode = 0
 access = 2
 
-[node name="HSeparator" type="HSeparator" parent="ShowSetupButton/SetupPopup/Setup Model"]
+[node name="OptionsContainer" type="HBoxContainer" parent="ShowSetupButton/SetupPopup/Setup Model"]
 margin_top = 28.0
 margin_right = 540.0
-margin_bottom = 32.0
+margin_bottom = 48.0
+
+[node name="DeviceLabel" type="Label" parent="ShowSetupButton/SetupPopup/Setup Model/OptionsContainer"]
+margin_top = 3.0
+margin_right = 52.0
+margin_bottom = 17.0
+text = "Device: "
+
+[node name="DeviceOptionButton" type="OptionButton" parent="ShowSetupButton/SetupPopup/Setup Model/OptionsContainer"]
+margin_left = 56.0
+margin_right = 129.0
+margin_bottom = 20.0
+text = "Device"
+script = ExtResource( 9 )
+
+[node name="HSeparator" type="HSeparator" parent="ShowSetupButton/SetupPopup/Setup Model"]
+margin_top = 52.0
+margin_right = 540.0
+margin_bottom = 56.0
 
 [node name="Outdir" type="HBoxContainer" parent="ShowSetupButton/SetupPopup/Setup Model"]
-margin_top = 36.0
+margin_top = 60.0
 margin_right = 540.0
-margin_bottom = 60.0
+margin_bottom = 84.0
 script = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]

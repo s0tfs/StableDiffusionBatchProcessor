@@ -13,6 +13,7 @@ func _ready():
   randomize()
   StableDiffusion.connect("model_init_progressed",self,"_on_model_init_progressed")
   StableDiffusion.connect("inference_finished",self,"_on_inference_finished")
+  StableDiffusion.connect("inference_failed",self,"_on_inference_failed")
   StableDiffusion.connect("image_data_ready",self,"_on_image_data_ready")
   Signals.connect("task_queued",self,"_try_to_start_new_task")
   Signals.connect("task_removed",self,"_on_task_removed")
@@ -69,5 +70,10 @@ func _on_image_data_ready(p_W:int,p_H:int,p_seed:int,data:PoolByteArray):
   
 func _on_inference_finished():
   current_task.state = TaskControl.STATE.FINISHED
+  inference_thread.call_deferred("wait_to_finish")
+  call_deferred("_try_to_start_new_task")
+
+func _on_inference_failed():
+  current_task.state = TaskControl.STATE.FAILED
   inference_thread.call_deferred("wait_to_finish")
   call_deferred("_try_to_start_new_task")

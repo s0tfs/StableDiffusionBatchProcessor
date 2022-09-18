@@ -41,6 +41,7 @@ class StableDiffusion(Node):
   model_init_progressed = signal()
   image_data_ready = signal()
   inference_started = signal()
+  inference_failed = signal()
   inference_finished = signal()
   
   def split_weighted_subprompts(self,text):
@@ -89,8 +90,10 @@ class StableDiffusion(Node):
     return prompts, weights
   
   
-  def init_model(self,weights_file_path):
+  def init_model(self,args):
     self.model_ready = False
+    weights_file_path = args["weights_file_path"]
+    self.opt_device = str(args["device"])
     print("Init Model. Loading weights from",weights_file_path)
     self.call("emit_signal","model_init_progressed","Loading weights")
     try:
@@ -177,8 +180,13 @@ class StableDiffusion(Node):
       all_samples = list()
       sample_path = os.path.join("outputs")
       os.makedirs(sample_path, exist_ok=True)
-      with self.precision_scope("cuda"):
-        self.modelCS.to(self.opt_device)
+      print("!!!!using",self.opt_device)
+      with self.precision_scope(self.opt_device):
+        try:
+          self.modelCS.to(self.opt_device)
+        except:
+          self.call("emit_signal","inference_failed")
+          return
         uc = None
         if p_scale != 1.0:
           uc = self.modelCS.get_learned_conditioning(p_n_samples * [""])

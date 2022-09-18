@@ -5,12 +5,15 @@ export var save_path := "user://settings.json"
 
 var dict := {
   "weights_path"  : "",
-  "outdir" : ""} setget _set_dict
+  "outdir" : "",
+  "device" : 0} setget _set_dict
 
 func _init():
   var config_file := File.new()
   if config_file.open(save_path,File.READ) == OK:
-    dict = JSON.parse(config_file.get_as_text()).result
+    var json_dict = JSON.parse(config_file.get_as_text()).result
+    for key in json_dict:
+      dict[key] = json_dict[key]
   else:
     print_debug("Could not load from " + save_path)
     

@@ -5,6 +5,7 @@ func _ready():
   StableDiffusion.connect("model_init_progressed",self,"_on_model_init_progressed")
   StableDiffusion.connect("inference_started",self,"_on_inference_started")
   StableDiffusion.connect("inference_finished",self,"_on_inference_finished")
+  StableDiffusion.connect("inference_failed",self,"_on_inference_failed")
   modulate = Color.red
 
 func _on_model_init_progressed(message:String):
@@ -23,3 +24,7 @@ func _on_inference_started():
 func _on_inference_finished():
   text = "Ready"
   modulate = Color.green
+
+func _on_inference_failed():
+  text = "failed"
+  modulate = Color.red
