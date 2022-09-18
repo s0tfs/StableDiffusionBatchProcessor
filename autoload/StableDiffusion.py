@@ -178,9 +178,7 @@ class StableDiffusion(Node):
     prompts = data[0]
     with torch.no_grad():
       all_samples = list()
-      sample_path = os.path.join("outputs")
-      os.makedirs(sample_path, exist_ok=True)
-      print("!!!!using",self.opt_device)
+      print("Using device ",self.opt_device)
       with self.precision_scope(self.opt_device):
         try:
           self.modelCS.to(self.opt_device)

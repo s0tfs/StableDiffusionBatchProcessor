@@ -30,7 +30,6 @@ func _on_task_add_button_pressed(task:TaskControl):
   new_task.seed_line_edit.text = ""#task.seed_line_edit.text 
   new_task.iterations_spin_box.value = task.iterations_spin_box.value
   new_task.scale_spin_box.value =task.scale_spin_box.value
-  new_task.grab_focus()
 
 func _on_task_removed():
   yield(get_tree().create_timer(0.3),"timeout")
