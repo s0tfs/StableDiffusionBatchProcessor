@@ -9,7 +9,7 @@ from omegaconf import OmegaConf
 from ldm.util import instantiate_from_config
 from contextlib import contextmanager, nullcontext
 from random import randint
-from einops import rearrange
+from einops import rearrange, repeat
 from PIL import Image as PILImage
 import numpy as np
 
@@ -44,6 +44,24 @@ class StableDiffusion(Node):
   inference_started = signal()
   inference_failed = signal()
   inference_finished = signal()
+  
+  def load_img(self,path, h0, w0):
+
+    image = PILImage.open(path).convert("RGB")
+    w, h = image.size
+
+    print(f"loaded input image of size ({w}, {h}) from {path}")
+    if h0 is not None and w0 is not None:
+        h, w = h0, w0
+
+    w, h = map(lambda x: x - x % 64, (w, h))  # resize to integer multiple of 32
+
+    print(f"New image size ({w}, {h})")
+    image = image.resize((w, h), resample = PILImage.LANCZOS)
+    image = np.array(image).astype(np.float32) / 255.0
+    image = image[None].transpose(0, 3, 1, 2)
+    image = torch.from_numpy(image)
+    return 2.0 * image - 1.0
   
   def split_weighted_subprompts(self,text):
     """
@@ -156,11 +174,10 @@ class StableDiffusion(Node):
     if self.opt_device != "cpu" and self.opt_precision == "autocast":
       self.model.half()
       self.modelCS.half()
-
-    if self.opt_precision == "autocast" and self.opt_device != "cpu":
-        self.precision_scope = autocast
+      self.modelFS.half()
+      self.precision_scope = autocast
     else:
-        self.precision_scope = nullcontext
+      self.precision_scope = nullcontext
     print("Model Initialized.")
     self.model_ready = True
     self.call("emit_signal","model_init_progressed","success")
@@ -176,7 +193,9 @@ class StableDiffusion(Node):
       p_ddim_steps = args["ddim_steps"],
       p_n_iter = args["n_iter"],
       p_scale = args["scale"],
-      p_tiling=args["tiling"])
+      p_tiling = args["tiling"],
+      p_input_img_path = str(args["input_image_path"]),
+      p_strength = args["strength"])
   
   def inference(self,p_prompt = "hamsters playing chess",
                 p_W = 64,
@@ -189,14 +208,46 @@ class StableDiffusion(Node):
                 p_C = 4, #latent channels
                 p_f = 8, #downsampling factor
                 p_ddim_eta = 0.0, # ddim eta (eta=0.0 corresponds to deterministic sampling
-                p_sampler = "plms"
+                p_sampler = "plms",
+                p_input_img_path = "",
+                p_strength = 1.0
                 ):
     self.call("emit_signal","inference_started")
     assert p_prompt is not None
     data = [p_n_samples * [p_prompt]]
     prompts = data[0]
     with torch.no_grad():
-      all_samples = list()
+    # *** prepare img2img *** #
+      init_latent = None
+      if os.path.isfile(p_input_img_path):
+        if (p_strength == 1.0):# this would crash with an index error
+          print("device, strength",self.opt_device,p_strength,"!this failed")
+          self.call("emit_signal","inference_failed") 
+        print("Preparing input image",p_input_img_path)
+        init_image = self.load_img(p_input_img_path, p_H, p_W).to(self.opt_device)
+        if self.opt_device != "cpu" and self.opt_precision == "autocast":
+          init_image = init_image.half()
+        self.modelFS.to(self.opt_device)
+        init_image = repeat(init_image, "1 ... -> b ...", b=p_n_samples)
+        init_latent = self.modelFS.get_first_stage_encoding(self.modelFS.encode_first_stage(init_image))  # move to latent space
+        
+        if self.opt_device != "cpu":
+          mem = torch.cuda.memory_allocated(device=self.opt_device) / 1e6
+          self.modelFS.to("cpu")
+          while torch.cuda.memory_allocated(device=self.opt_device) / 1e6 >= mem:
+              time.sleep(1)
+        
+        # encode (scaled latent)
+        t_enc = int(p_strength * p_ddim_steps)
+        print("t_enc: ",t_enc,"=",p_strength,"*",p_ddim_steps)
+        z_enc = self.model.stochastic_encode(
+            init_latent,
+            torch.tensor([t_enc] * p_n_samples).to(self.opt_device),
+            self.next_seed,
+            p_ddim_eta,
+            p_ddim_steps,
+        )
+        
       print("Using device ",self.opt_device)
       with self.precision_scope(self.opt_device):
         try:
@@ -222,16 +273,13 @@ class StableDiffusion(Node):
             c = torch.add(c, self.modelCS.get_learned_conditioning(subprompts[i]), alpha=weight)
         else:
           c = self.modelCS.get_learned_conditioning(prompts)
-   # *** tiling *** #
+  # *** tiling *** #
         for module in self.model.modules():
           if isinstance(module, (nn.Conv2d, nn.ConvTranspose2d)):
             if p_tiling:
               module.padding_mode = 'circular'
             else:
               module.padding_mode = "zeros"
-      
-      
-        shape = [p_n_samples, p_C, p_H // p_f, p_W // p_f]
         if self.opt_device != "cpu":
             mem = torch.cuda.memory_allocated() / 1e6
             self.modelCS.to("cpu")
@@ -241,7 +289,19 @@ class StableDiffusion(Node):
           if self.canceled == True:
             self.canceled = False
             break
-          samples_ddim = self.model.sample(
+          #decode
+          if init_latent != None:  #img2img
+            samples_ddim = self.model.sample(
+                t_enc,
+                c,
+                z_enc,
+                unconditional_guidance_scale=p_scale,
+                unconditional_conditioning=uc,
+                sampler = "ddim"
+            )
+          else:
+            shape = [p_n_samples, p_C, p_H // p_f, p_W // p_f]
+            samples_ddim = self.model.sample(
               S=p_ddim_steps,
               conditioning=c,
               seed=self.next_seed,
@@ -252,7 +312,7 @@ class StableDiffusion(Node):
               eta=p_ddim_eta,
               x_T=self.start_code,
               sampler = p_sampler,
-          )
+            )
           self.modelFS.to(self.opt_device)
 
           for i in range(p_n_samples):

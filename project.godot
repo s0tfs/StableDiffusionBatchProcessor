@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "TextureButton",
+"class": "InputImageButton",
+"language": "GDScript",
+"path": "res://scenes/generate/task_control/InputImageButton.gd"
+}, {
 "base": "TextureRect",
 "class": "ResultTile",
 "language": "GDScript",
@@ -25,6 +30,7 @@ _global_script_classes=[ {
 "path": "res://scenes/generate/task_control/TaskControl.gd"
 } ]
 _global_script_class_icons={
+"InputImageButton": "",
 "ResultTile": "",
 "Settings": "",
 "TaskControl": ""
@@ -41,7 +47,8 @@ config/icon="res://icon.png"
 
 StableDiffusion="*res://autoload/StableDiffusion.py"
 Signals="*res://autoload/signals.gd"
-SaveDialog="*res://autoload/save_dialog.gd"
+SaveDialog="*res://autoload/SaveDialog.tscn"
+InputImageFileDialog="*res://autoload/InputImageFileDialog.tscn"
 
 [gdnative]
 
