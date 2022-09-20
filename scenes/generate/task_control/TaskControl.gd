@@ -8,13 +8,15 @@ enum STATE{
   FINISHED,
   FAILED
  }
-
+var seed_was_random := false
 var state = STATE.IDLE setget _set_state
 const idle_text =     "   Go!  "
 const queued_text =   " queued "
 const sampling_text = "sampling"
 const finished_text = "finished"
 const failed_text =   " failed "
+
+
 
 func _set_state(new_state):
   state =  new_state
@@ -37,6 +39,9 @@ func _set_state(new_state):
       if seed_line_edit.text == "":
         seed_line_edit.text = str(randi())
         print_debug("use random seed ",seed_line_edit.text)
+        seed_was_random = true
+      else:
+        seed_was_random = false
       remove_button.disabled = true
       queue_button.text = sampling_text
       queue_button.modulate = Color.yellow
@@ -74,14 +79,15 @@ onready var scale_spin_box = $VBoxContainer/SettingsContainer/HBoxContainer2/Sca
 onready var seed_line_edit = $VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit
 onready var remove_button = $VBoxContainer/SettingsContainer/HBoxContainer2/RemoveButton
 onready var cancel_button = $VBoxContainer/SettingsContainer/HBoxContainer2/CancelButton
-onready var tiling_checkbox =$VBoxContainer/SettingsContainer/HBoxContainer2/TilingCheckBox
+onready var tiling_checkbox = $VBoxContainer/SettingsContainer/HBoxContainer2/TilingCheckBox
+onready var input_image_button = $VBoxContainer/SettingsContainer/HBoxContainer1/InputImageButton
+onready var strength_spin_box = $VBoxContainer/SettingsContainer/HBoxContainer1/StrengthSpinBox
 func _ready():
   _set_state(STATE.IDLE)
   update_drop_down_button()
   results_container.connect("result_added",self,"_on_results_container_result_added")
 
 func _on_results_container_result_added():
-  drop_down_button.disabled = false
   update_drop_down_button()
 
 func get_args() -> Dictionary:
@@ -94,7 +100,9 @@ func get_args() -> Dictionary:
   "n_iter":int(iterations_spin_box.value),
   "scale":scale_spin_box.value,
   "seed": seed_line_edit.text.to_int(),
-  "tiling": tiling_checkbox.pressed
+  "tiling": tiling_checkbox.pressed,
+  "input_image_path":input_image_button.input_image_path,
+  "strength":strength_spin_box.value
   }
 
 func _on_QueueButton_pressed():
@@ -115,6 +123,8 @@ func _set_editable(value:bool):
   seed_line_edit.editable = value
   iterations_spin_box.editable = value
   tiling_checkbox.disabled = !value
+  input_image_button.disabled = !value
+  strength_spin_box.editable = value
 
 func _on_AddButton_pressed():
   Signals.emit_signal("task_add_button_pressed",self)
@@ -129,7 +139,6 @@ func _on_DropDownButton_pressed():
 
 func update_drop_down_button():
   var result_count = results_container.get_result_count()
-  drop_down_button.disabled = result_count == 0
   var text := ""
   if results_container.visible:
     text = "hide "

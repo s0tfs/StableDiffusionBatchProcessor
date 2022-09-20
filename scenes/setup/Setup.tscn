@@ -23,10 +23,10 @@ script = ExtResource( 6 )
 
 [node name="SetupPopup" type="Popup" parent="ShowSetupButton"]
 visible = true
-margin_left = 5.0
-margin_top = 37.0
-margin_right = 545.0
-margin_bottom = 122.0
+margin_left = 6.0
+margin_top = 29.0
+margin_right = 546.0
+margin_bottom = 114.0
 
 [node name="Panel" type="Panel" parent="ShowSetupButton/SetupPopup"]
 anchor_right = 1.0
@@ -52,11 +52,12 @@ text = "Weights: "
 margin_left = 64.0
 margin_right = 426.0
 margin_bottom = 24.0
+hint_tooltip = "Get the weights file from https://huggingface.co/CompVis"
 size_flags_horizontal = 3
 editable = false
 placeholder_text = "no path to weights file"
 __meta__ = {
-"_editor_description_": "Get the weights from https://huggingface.co/CompVis"
+"_editor_description_": ""
 }
 
 [node name="open_file_dialog_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Weights"]
@@ -124,11 +125,12 @@ margin_left = 76.0
 margin_right = 476.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 400, 0 )
+hint_tooltip = "Leave this empty if you do not want your results to be automatically saved"
 size_flags_horizontal = 3
 editable = false
 placeholder_text = "no autosave path"
 __meta__ = {
-"_editor_description_": "leave this empty if you do not want your results to be automatically saved"
+"_editor_description_": ""
 }
 
 [node name="open_file_dialog_button" type="Button" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]
@@ -141,9 +143,10 @@ icon = ExtResource( 3 )
 margin_left = 512.0
 margin_right = 540.0
 margin_bottom = 24.0
+hint_tooltip = "do not autosave"
 icon = ExtResource( 8 )
 __meta__ = {
-"_editor_description_": "do not autosave"
+"_editor_description_": ""
 }
 
 [node name="FileDialog" type="FileDialog" parent="ShowSetupButton/SetupPopup/Setup Model/Outdir"]

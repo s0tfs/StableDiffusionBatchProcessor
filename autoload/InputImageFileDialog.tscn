@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://autoload/InputImageFileDialog.gd" type="Script" id=1]
+
+[node name="InputImageFileDialog" type="FileDialog"]
+margin_left = 84.0
+margin_top = 81.0
+margin_right = 967.0
+margin_bottom = 561.0
+window_title = "Choose Input Image"
+resizable = true
+mode = 0
+access = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "Load an input image. Right click to clear."
+}

@@ -27,10 +27,15 @@ func _on_task_add_button_pressed(task:TaskControl):
   new_task.h_spin_box.value = task.h_spin_box.value
   new_task.samples_spin_box.value = task.samples_spin_box.value
   new_task.steps_spin_box.value = task.steps_spin_box.value
-  new_task.seed_line_edit.text = ""#task.seed_line_edit.text 
+  if task.seed_was_random:
+    new_task.seed_line_edit.text = ""
+  else:
+    new_task.seed_line_edit.text = task.seed_line_edit.text
   new_task.iterations_spin_box.value = task.iterations_spin_box.value
   new_task.scale_spin_box.value =task.scale_spin_box.value
   new_task.tiling_checkbox.pressed = task.tiling_checkbox.pressed
+  new_task.input_image_button.input_image_path = task.input_image_button.input_image_path
+  new_task.strength_spin_box.value = task.strength_spin_box.value
 
 func _on_task_removed():
   yield(get_tree().create_timer(0.3),"timeout")

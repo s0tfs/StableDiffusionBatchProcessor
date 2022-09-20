@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/generate/task_control/ResultsContainer.gd" type="Script" id=1]
 [ext_resource path="res://scenes/generate/task_control/SeedLineEdit.gd" type="Script" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://icons/Remove.svg" type="Texture" id=5]
 [ext_resource path="res://icons/Add.svg" type="Texture" id=6]
 [ext_resource path="res://icons/Close.svg" type="Texture" id=7]
+[ext_resource path="res://scenes/generate/task_control/InputImageButton.gd" type="Script" id=8]
+[ext_resource path="res://icons/Image.svg" type="Texture" id=9]
 
 [sub_resource type="Shader" id=3]
 code = "//https://godotshaders.com/shader/hsv-adjustment/
@@ -67,22 +69,60 @@ margin_right = 1214.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+[node name="InputImageButton" type="TextureButton" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 0 )
+hint_tooltip = "Provide an input image."
+size_flags_horizontal = 0
+size_flags_vertical = 3
+texture_normal = ExtResource( 9 )
+expand = true
+stretch_mode = 5
+script = ExtResource( 8 )
+__meta__ = {
+"_editor_description_": ""
+}
+default_texture = ExtResource( 9 )
+
+[node name="StrengthLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+visible = false
+margin_left = 28.0
 margin_top = 5.0
-margin_right = 51.0
+margin_right = 89.0
+margin_bottom = 19.0
+text = "Strength: "
+
+[node name="StrengthSpinBox" type="SpinBox" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+visible = false
+margin_left = 28.0
+margin_right = 102.0
+margin_bottom = 24.0
+hint_tooltip = "How much should the input image be changed. 
+0.0 -> no change
+1.0 -> ignore the input image"
+max_value = 0.99
+step = 0.01
+value = 0.8
+
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
+margin_left = 28.0
+margin_top = 5.0
+margin_right = 79.0
 margin_bottom = 19.0
 text = "Prompt:"
 
 [node name="PromptEdit" type="LineEdit" parent="VBoxContainer/SettingsContainer/HBoxContainer1"]
-margin_left = 55.0
+margin_left = 83.0
 margin_right = 1214.0
 margin_bottom = 24.0
+hint_tooltip = "Describe the image you want. Go to lexica.art for inspiration."
 size_flags_horizontal = 3
 text = "Hamsters playing chess."
 caret_blink = true
 caret_blink_speed = 0.5
 __meta__ = {
-"_editor_description_": "Describe the image you want. Go to lexica.art for inspiration."
+"_editor_description_": ""
 }
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsContainer"]
@@ -101,10 +141,11 @@ text = "Iterations:"
 margin_left = 70.0
 margin_right = 144.0
 margin_bottom = 26.0
+hint_tooltip = "How often this task will be run."
 min_value = 1.0
 value = 1.0
 __meta__ = {
-"_editor_description_": "How often this task will be run."
+"_editor_description_": ""
 }
 
 [node name="Samples" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -118,11 +159,12 @@ text = "Samples:"
 margin_left = 210.0
 margin_right = 284.0
 margin_bottom = 26.0
+hint_tooltip = "How many images are created per iteration."
 min_value = 1.0
 max_value = 128.0
 value = 4.0
 __meta__ = {
-"_editor_description_": "How many images are created per iteration."
+"_editor_description_": ""
 }
 
 [node name="WLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -136,12 +178,13 @@ text = "Width:"
 margin_left = 334.0
 margin_right = 408.0
 margin_bottom = 26.0
+hint_tooltip = "Width and height of generated image. Best results are to be expected for 512x512."
 min_value = 64.0
 max_value = 2048.0
 step = 64.0
 value = 512.0
 __meta__ = {
-"_editor_description_": "Width and height of generated image. Best results are to be expected for 512x512."
+"_editor_description_": ""
 }
 
 [node name="HLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -155,12 +198,13 @@ text = "Height:"
 margin_left = 462.0
 margin_right = 536.0
 margin_bottom = 26.0
+hint_tooltip = "Width and height of generated image. Best results are to be expected for 512x512."
 min_value = 64.0
 max_value = 2048.0
 step = 64.0
 value = 512.0
 __meta__ = {
-"_editor_description_": "Width and height of generated image. Best results are to be expected for 512x512."
+"_editor_description_": ""
 }
 
 [node name="StepsLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -174,10 +218,12 @@ text = "Steps:"
 margin_left = 583.0
 margin_right = 657.0
 margin_bottom = 26.0
+hint_tooltip = "How many steps are used to create the image. More steps need more time.
+Loosely correlates with quality."
 max_value = 500.0
 value = 30.0
 __meta__ = {
-"_editor_description_": "How many steps are used to create the image. Loosely correlates with quality."
+"_editor_description_": ""
 }
 
 [node name="ScaleLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -191,12 +237,12 @@ text = "Scale:"
 margin_left = 702.0
 margin_right = 776.0
 margin_bottom = 26.0
+hint_tooltip = "How strictly the model tries to follow your prompt. Lower values for more 'creativity'."
 max_value = 20.0
 step = 0.1
 value = 7.5
 __meta__ = {
-"_editor_description_": "lower: be creative
-higer: follow the prompt strictly"
+"_editor_description_": ""
 }
 
 [node name="TilingLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
@@ -210,6 +256,7 @@ text = "Tiling: "
 margin_left = 826.0
 margin_right = 850.0
 margin_bottom = 26.0
+hint_tooltip = "Create images that wrap around the borders."
 
 [node name="SeedLabel" type="Label" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 854.0
@@ -217,6 +264,9 @@ margin_top = 6.0
 margin_right = 889.0
 margin_bottom = 20.0
 text = "Seed:"
+__meta__ = {
+"_editor_description_": ""
+}
 
 [node name="SeedLineEdit" type="LineEdit" parent="VBoxContainer/SettingsContainer/HBoxContainer2"]
 margin_left = 893.0
@@ -266,9 +316,10 @@ icon = ExtResource( 7 )
 margin_left = 1186.0
 margin_right = 1214.0
 margin_bottom = 26.0
+hint_tooltip = "Duplicate this task"
 icon = ExtResource( 6 )
 __meta__ = {
-"_editor_description_": "Duplicate this task"
+"_editor_description_": ""
 }
 
 [node name="ResultsContainer" type="Panel" parent="VBoxContainer"]
@@ -298,8 +349,8 @@ material = SubResource( 4 )
 position = Vector2( 569.5, 28 )
 scale = Vector2( 5.705, 0.29 )
 
+[connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer1/InputImageButton" to="VBoxContainer/SettingsContainer/HBoxContainer1/InputImageButton" method="_on_InputImageButton_pressed"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" to="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" method="_on_SeedLineEdit_text_changed"]
-[connection signal="text_entered" from="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" to="VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit" method="_on_SeedLineEdit_text_entered"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/QueueButton" to="." method="_on_QueueButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/DropDownButton" to="." method="_on_DropDownButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/SettingsContainer/HBoxContainer2/RemoveButton" to="." method="_on_RemoveButton_pressed"]
