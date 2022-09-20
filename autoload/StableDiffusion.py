@@ -4,7 +4,7 @@ import sys,os
 sys.path.append(os.path.join(os.path.dirname(__file__),"../addons/pythonscript/x11-64/src/latent-diffusion"))
 print("sys.path: ",sys.path)
 import torch
-from torch import autocast
+from torch import autocast, nn
 from omegaconf import OmegaConf
 from ldm.util import instantiate_from_config
 from contextlib import contextmanager, nullcontext
@@ -168,7 +168,15 @@ class StableDiffusion(Node):
   def inference_gd(self,args):
     self.next_seed = args["seed"]
     print("Using seed",self.next_seed)
-    self.inference(p_prompt=str(args["prompt"]),p_W=args["W"],p_H=args["H"],p_n_samples=args["samples"],p_ddim_steps = args["ddim_steps"],p_n_iter = args["n_iter"],p_scale = args["scale"])
+    self.inference(
+      p_prompt=str(args["prompt"]),
+      p_W=args["W"],
+      p_H=args["H"],
+      p_n_samples=args["samples"],
+      p_ddim_steps = args["ddim_steps"],
+      p_n_iter = args["n_iter"],
+      p_scale = args["scale"],
+      p_tiling=args["tiling"])
   
   def inference(self,p_prompt = "hamsters playing chess",
                 p_W = 64,
@@ -177,6 +185,7 @@ class StableDiffusion(Node):
                 p_ddim_steps = 5,
                 p_n_iter = 1,
                 p_scale = 7.5, # unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))
+                p_tiling = False,
                 p_C = 4, #latent channels
                 p_f = 8, #downsampling factor
                 p_ddim_eta = 0.0, # ddim eta (eta=0.0 corresponds to deterministic sampling
@@ -213,7 +222,15 @@ class StableDiffusion(Node):
             c = torch.add(c, self.modelCS.get_learned_conditioning(subprompts[i]), alpha=weight)
         else:
           c = self.modelCS.get_learned_conditioning(prompts)
-
+   # *** tiling *** #
+        for module in self.model.modules():
+          if isinstance(module, (nn.Conv2d, nn.ConvTranspose2d)):
+            if p_tiling:
+              module.padding_mode = 'circular'
+            else:
+              module.padding_mode = "zeros"
+      
+      
         shape = [p_n_samples, p_C, p_H // p_f, p_W // p_f]
         if self.opt_device != "cpu":
             mem = torch.cuda.memory_allocated() / 1e6

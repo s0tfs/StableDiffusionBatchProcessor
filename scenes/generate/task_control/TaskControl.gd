@@ -74,7 +74,7 @@ onready var scale_spin_box = $VBoxContainer/SettingsContainer/HBoxContainer2/Sca
 onready var seed_line_edit = $VBoxContainer/SettingsContainer/HBoxContainer2/SeedLineEdit
 onready var remove_button = $VBoxContainer/SettingsContainer/HBoxContainer2/RemoveButton
 onready var cancel_button = $VBoxContainer/SettingsContainer/HBoxContainer2/CancelButton
-
+onready var tiling_checkbox =$VBoxContainer/SettingsContainer/HBoxContainer2/TilingCheckBox
 func _ready():
   _set_state(STATE.IDLE)
   update_drop_down_button()
@@ -93,7 +93,8 @@ func get_args() -> Dictionary:
   "ddim_steps":int(steps_spin_box.value),
   "n_iter":int(iterations_spin_box.value),
   "scale":scale_spin_box.value,
-  "seed": seed_line_edit.text.to_int()
+  "seed": seed_line_edit.text.to_int(),
+  "tiling": tiling_checkbox.pressed
   }
 
 func _on_QueueButton_pressed():
@@ -113,6 +114,7 @@ func _set_editable(value:bool):
   scale_spin_box.editable = value
   seed_line_edit.editable = value
   iterations_spin_box.editable = value
+  tiling_checkbox.disabled = !value
 
 func _on_AddButton_pressed():
   Signals.emit_signal("task_add_button_pressed",self)
