@@ -1,7 +1,13 @@
 # modified from https://github.com/basujindal/stable-diffusion
 from godot import exposed, export, signal, Node, PoolByteArray
 import sys,os
-sys.path.append(os.path.join(os.path.dirname(__file__),"../addons/pythonscript/x11-64/src/latent-diffusion"))
+from pathlib import Path
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/x11-64/src/latent-diffusion")))
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/windows-64/src/latent-diffusion")))
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/x11-64/src/taming-transformers")))
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/windows-64/src/taming-transformers")))
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/x11-64/src/clip")))
+sys.path.append(str(Path(os.path.dirname(os.path.dirname(__file__)),"addons/pythonscript/windows-64/src/clip")))
 print("sys.path: ",sys.path)
 import torch
 from torch import autocast, nn
